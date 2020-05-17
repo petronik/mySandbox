@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+</head>
+<body>
+    
+<h1>Color Match Game</h1>
+
+<div id="start">Start Game</div>
+<div id="gamearea">
+    <div id="findme">Match this color
+        <br>
+        <span id="message"></span>
+    </div>
+    <div id="output"></div>
+</div>
+
+
+
+    <script src="./src/js/jquery.js"></script>
+    <script>
+    $(document).ready(function() {
+        let colorArray = [];
+        $('#gamearea').hide();
+        $('#start').click(startGame);
+        $('#output').on('click', '.cell', checkCell)
+        $('#start').css({
+            border: '1px solid black',
+            textAlign: 'center',
+            padding: '10px',
+            width: '150px',
+            backgroundColor: 'red',
+            fontSize: '2em',
+            marginBottom: '10px',
+            color: 'white'
+        })
+        $('#findme').css({
+            border: '1px solid black',
+            textAlign: 'center',
+            padding: '0px',
+            width: '606px',
+            height: '100px',
+            fontSize: '2em',
+            display:'inline-block'
+        })
+        function startGame() {
+            makeBoard();
+            pickMyColor();
+            $('#start').hide();
+            $('#gamearea').show();
+        }
+        function addNewColor() {
+            let trackColor = randomColor();
+            colorArray.push(trackColor);
+            console.log(colorArray.length)
+            return trackColor
+        }
+        function makeBoard() {
+            let x = 4;
+            let html = '';
+            for(let row = 0; row < x; row++){
+                html += '<div class="row">';
+                for(let col = 0; col < x; col++){
+                    html += '<div class="cell"style="background-color:'+addNewColor()+'">0</div>'
+                    console.log(randomColor())
+                }
+                html += '</div>';
+            }
+            $('#output').html(html)
+            $('.cell').css({
+                border: '1px solid black',
+                textAlign: 'center',
+                padding: '0px',
+                margin: '0px',
+                width: '150px',
+                height: '100px',
+                fontSize: '2em',
+                display:'inline-block'
+        
+            })
+        }
+        function checkCell() {
+            let currentColor = $(this).css('backgroundColor');
+            if(currentColor == $('#findme').css('backgroundColor')) {
+                let countValue = Number($(this).text());
+                countValue++
+                $(this).text(countValue);
+                $(this).css('backgroundColor',addNewColor());
+                pickMyColor();
+                $('#message').html('Correct Great :)')
+            }else {
+                $('#message').html('Sorry Wrong Color :(')
+            }
+        }
+        function pickMyColor() {
+            let index = Math.floor(Math.random()*colorArray.length);
+            let picked = colorArray.splice(index, 1);
+            $('#findme').css('background-color', picked)
+        }
+        function randomColor() {
+            //return '#' + ((1<<24)*Math.random() | 0).toString(16)
+            let r = Math.floor(Math.random()* 256);
+            let g = Math.floor(Math.random()* 256);
+            let b = Math.floor(Math.random()* 256);
+            let rgb = 'rgb('+r+','+g+','+b+')'
+            return rgb
+        }
+    })
+    </script>
+</body>
+</html>
